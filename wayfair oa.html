@@ -1,0 +1,153 @@
+<html lang="en" class="gr__mahua_jser_me"><head>
+    <meta charset="UTF-8">
+    <title></title>
+<style id="system" type="text/css">*{margin:0;padding:0;}body {	font:13.34px helvetica,arial,freesans,clean,sans-serif;	color:black;	line-height:1.4em;	background-color: #F8F8F8;	padding: 0.7em;}p {	margin:1em 0;	line-height:1.5em;}table {	font-size:inherit;	font:100%;	margin:1em;}table th{border-bottom:1px solid #bbb;padding:.2em 1em;}table td{border-bottom:1px solid #ddd;padding:.2em 1em;}input[type=text],input[type=password],input[type=image],textarea{font:99% helvetica,arial,freesans,sans-serif;}select,option{padding:0 .25em;}optgroup{margin-top:.5em;}pre,code{font:12px Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace;}pre {	margin:1em 0;	font-size:12px;	background-color:#eee;	border:1px solid #ddd;	padding:5px;	line-height:1.5em;	color:#444;	overflow:auto;	-webkit-box-shadow:rgba(0,0,0,0.07) 0 1px 2px inset;	-webkit-border-radius:3px;	-moz-border-radius:3px;border-radius:3px;white-space: pre-wrap;word-wrap:break-word;}pre code {	padding:0;	font-size:12px;	background-color:#eee;	border:none;}code {	font-size:12px;	background-color:#f8f8ff;	color:#444;	padding:0 .2em;	border:1px solid #dedede;}img{border:0;max-width:100%;}abbr{border-bottom:none;}a{color:#4183c4;text-decoration:none;}a:hover{text-decoration:underline;}a code,a:link code,a:visited code{color:#4183c4;}h2,h3{margin:1em 0;}h1,h2,h3,h4,h5,h6{border:0;}h1{font-size:170%;border-top:4px solid #aaa;padding-top:.5em;margin-top:1.5em;}h1:first-child{margin-top:0;padding-top:.25em;border-top:none;}h2{font-size:150%;margin-top:1.5em;border-top:4px solid #e0e0e0;padding-top:.5em;}h3{margin-top:1em;}hr{border:1px solid #ddd;}ul{margin:1em 0 1em 2em;}ol{margin:1em 0 1em 2em;}ul li,ol li{margin-top:.5em;margin-bottom:.5em;}ul ul,ul ol,ol ol,ol ul{margin-top:0;margin-bottom:0;}blockquote{margin:1em 0;border-left:5px solid #ddd;padding-left:.6em;color:#555;}dt{font-weight:bold;margin-left:1em;}dd{margin-left:2em;margin-bottom:1em;}@media screen and (min-width: 768px) {    body {        width: 748px;        margin:10px auto;    }}</style><style id="custom" type="text/css"></style></head>
+<body marginheight="0" data-gr-c-s-loaded="true"><p>Wayfair OA
+
+
+</p>
+<h2>2 返回任意一个比N大但是不比1000，000，000大的10的整数</h2>
+<pre><code class="lang-java">Public int returnInt(int N){
+  return 1000000000;
+}
+
+public static void Max(int n){
+            System.out.print( (n/10+1)* 10);
+        }</code></pre>
+<h2>2 Given a list of integers (a mix of positive, 0, and negative), compute and return the sum of all 2-digit integers.</h2>
+<pre><code class="lang-java">public int Sum(int[] nums){
+        long sum = 0;
+        for (int i : nums){
+            if (i%10&gt;0 &amp;&amp; i%10&lt;10){
+                sum += (long) i;
+            }
+            if (-i%10&gt;0 &amp;&amp; -i%10&lt;10){
+                sum += (long) i;
+            }
+        }
+        if (sum &gt; Integer.MAX_VALUE) return  Integer.MAX_VALUE;
+        if (sum &lt; Integer.MIN_VALUE) return Integer.MIN_VALUE;
+        return (int) sum;
+    }</code></pre>
+<h2>2 输出数字</h2>
+<pre><code class="lang-java">public static void print(int n){
+        for (int i = 1; i &lt;= n; i++){
+            if (i%2==0){
+                System.out.print("AAA");
+                if (i%3==0 &amp;&amp; i%5!=0){
+                    System.out.print("BBB");
+                }
+                if (i%3==0 &amp;&amp; i%5==0){
+                    System.out.print("BBBCCC");
+                }
+                if (i%3!=0 &amp;&amp; i%5==0){
+                    System.out.print("CCC");
+                }
+                System.out.println();
+            } else if (i%3==0){
+                System.out.print("BBB");
+                if (i%5==0) System.out.print("CCC");
+                System.out.println();
+            } else if (i%5==0){
+                System.out.println("CCC");
+            }
+            else System.out.println(i);
+        }
+    }</code></pre>
+<h2>2 需要多少次把硬币翻到同一面</h2>
+<pre><code class="lang-java">public int SameCoin(int[] nums){
+        int time = 0;
+        for (int i : nums){
+            time += i;
+        }
+        return Math.min(time, nums.length-time);
+    }</code></pre>
+<h2>2 反转数字</h2>
+<pre><code class="lang-java">public static long Reverse(int n){
+        long res = 0;
+        while (n!=0){
+            res = res * 10 + n%10;
+            n = n/10;
+        }
+        return res;
+    }
+
+public static void Reverse(int nums[]){
+        int temp;
+        for (int i = 0; i &lt; nums.length/2; i++){
+            temp = nums[i];
+            nums[i] = nums[nums.length - 1 - i];
+            nums[nums.length - 1 - i] = temp;
+        }
+        System.out.print( Arrays.toString(nums));
+        return ;
+    }</code></pre>
+<h2>2 找出兄弟数字 输入12 返回21</h2>
+<pre><code class="lang-java">public static long MaxSib(int n){
+        if (n==0) return 0;
+        int ncopy = n;
+        int len = 0;
+        while (n!=0){
+            len++;
+            n = n/10;
+        }
+        int[] nums = new int[len];
+        n = ncopy;
+        for (int i = 0; i &lt; len; i++){
+            nums[i] = n%10;
+            n = n/10;
+        }
+        Arrays.sort(nums);
+        long res = 0;
+        for (int i = len - 1; i &gt;= 0; i--){
+            res = res * 10 + nums[i];
+        }
+        return res;
+    }</code></pre>
+<h2>3 name two ways to identify the impact of make shipping time from 2 days to 1 days;</h2>
+<p>方法1：ABtesing
+
+</p>
+<p>方法2：Consulting
+
+</p>
+<p>two risks of promising shorter shipping time
+
+</p>
+<p>风险1：无法按期交付
+
+</p>
+<p>风险2：更高的运输成本
+
+</p>
+<h2>3 我们现在对网站做测试，去掉一半网站上的服务电话（免费的）。</h2>
+<p>问题1：我们为什么要做这个测试
+
+</p>
+<p>回答1：AB testing的目的。
+
+</p>
+<p>问题2：通过这一实验，我们如何判断这一实验可以向所有的用户推广。
+
+</p>
+<p>回答2：选择不同的metrics，预设测试的结果并给出decision。
+
+
+
+</p>
+<h2>4 ice cream excel insights and recommendations.</h2>
+<p><a href="https://github.com/BienhCunShan/Data/blob/master/IceCreamDataSet.xlsx">https://github.com/BienhCunShan/Data/blob/master/IceCreamDataSet.xlsx</a>
+
+</p>
+<p>Given an excel file containing sales from an ice cream shop in March 2018, review the dataset and answer the following:
+
+</p>
+<p>(1) Provide 3-5 insights about the sales in March.
+
+</p>
+<p>(2) Provide 2-3 recommendations to the shop owner based on the analysis.
+
+
+</p>
+<p>Edit By <a href="http://mahua.jser.me">MaHua</a></p>
+</body></html>
