@@ -1,0 +1,184 @@
+import math
+import random
+import time
+import numpy as np
+
+TAU = (5**0.5-1)/2
+EP_X = 1e-6
+EP_F = 1e-8
+EP_M = 0
+POINT_NUM = 20
+EP_M = 2.220446049250313e-16
+
+global x
+global d
+
+# optimizer
+def optimizer1D(func, x1, s):
+    f1 = func(x1)
+    count = 0
+    x2 = x1 + s
+    f2 = func(x2)
+    count += 1
+    if f2 > f1:
+        x1, x2 = x2, x1
+        f1, f2 = f2, f1
+        s = -s
+    
+    while True:
+        s = s/TAU
+        x4 = x2 +s
+        f4 = func(x4)
+        count += 1
+        if f4 > f2:
+            break
+        x1, x2 = x2, x4
+        f1, f2 = f2, f4
+    f_bar = 0
+    
+    while True:
+        x3 = TAU * x4 + (1 - TAU) * x1
+        f3 = func(x3)
+        count += 1
+        if(f2 < f3):
+            x4, x1 = x1, x3
+        else:
+            x1, x2, f2 = x2, x3, f3
+        f_old = f_bar
+        f_bar = (f1 + f2 + f3)/3
+        if abs(x1-x4) <= EP_M**0.5*abs(x2) + EP_X or abs(f_bar - f_old) <= EP_M**0.5*abs(f2)+EP_F:
+            break
+
+    return x2
+
+#function of X
+def func1(x):
+    return (1-x[0])**2 + 100 * (x[1] - x[0]**2)**2
+
+def func2(x):
+    return (1-x[0])**2+(x[1]-2*x[0]**2)**2+(x[2]-x[1])**2+(x[3]-x[2])**2+(2*x[4]-x[3])**2+(x[5]-x[4])**2+(x[6]-x[5])**2+(x[7]-2*x[6])**2+(x[8]-x[7])**2+(2*x[9]-x[8])**2
+
+#gredient function
+def funcg1(x):
+    return np.array([-2+2*x[0]-400*x[0]*(x[1]-x[0]**2), 200*(x[1]-x[0]**2)])
+
+def funcg2(x):
+    return np.array([-2*(1-x[0])-8*(x[1]-2*x[0]**2)*x[0],
+                     -4*x[0]+4*x[1]-2*x[2],
+                     -2*x[1]+4*x[2]-2*x[3],
+                     -2*x[2]+4*x[3]-4*x[4],
+                     -4*x[3]+10*x[4]-2*x[5],
+                     -2*x[4]+4*x[5]-2*x[6],
+                     -2*x[5]+10*x[6]-4*x[7],
+                     -4*x[6]+4*x[7]-2*x[8],
+                     -2*x[7]+4*x[8]-4*x[9],
+                     4*(2*x[9]-x[8])
+                     ])
+
+
+def conjugate_gradients(func,x0,fprime,restart_frequency, x_tol = 0.005, f_tol = EP_F, r_tol = 2.220446049250313e-16**0.5):
+    global x
+    global d
+    count = 0
+    x = x0
+    gk = fprime(x)
+    while(True):
+        d = -gk
+        for i in range(restart_frequency):
+            funca = lambda alpha: func(x + alpha * d)
+            alpha = optimizer1D(funca, 0, 0.1)
+            y0 = func(x)
+            x = x + alpha * d
+            y = func(x)
+            count += 1
+            if (abs(y - y0) <=  r_tol * abs(y0) + f_tol):
+                return x, y, count
+                break
+            gn = fprime(x)
+            beta = gn.dot(gn) / gk.dot(gk)
+            d = -gn + beta * d
+            gk = gn
+    return x, y, count
+
+def alternate_method(func, x0, fprime, gamma = 6.28, step_evaluator=lambda x: x**2.0, epsilon_G=1e-9, epsilon_A=1e-9, epsilon_R=1e-9, epsilon_f=1e-9):
+    x_k = x0
+    g_k = fprime(x_k)
+    count = [0,0]
+    c = 1
+    while True:
+        if np.linalg.norm(g_k) <= epsilon_G:
+            return x_k, func(x_k), c
+        d_k = -g_k/np.linalg.norm(g_k)
+        alpha = optimizer1D(step_evaluator, 0, 0.1)
+        step_evaluator = lambda alpha: func(x_k + alpha * d_k)
+        x_l = x_k + alpha * d_k
+        f_l = func(x_l)
+        f_k = func(x_k)
+        if abs(f_l - f_k) <= epsilon_A + epsilon_R * abs(f_k):
+            count.append(1);
+        else:
+            count.append(0)
+        x_k = x_l
+        g_k = fprime(x_k)
+        c = c+1
+        if count[-2]+count[-1]==2:
+            return x_l, f_l, c-1
+        
+def eval(func, fprime, true_val):
+    x_value = []
+    f_value = []
+    c_value = []
+    i = 0
+    while i < POINT_NUM:
+        if true_val.shape[0] == 2:
+            start,n = np.random.uniform(-1, 1, 2),2;
+        else:
+            start,n = np.random.uniform(-1, 1, 10),10;  
+        x_val,f_val,c_val = conjugate_gradients(func = func, x0 = start, fprime = fprime, restart_frequency = n)
+        c_value.append(c_val)
+        f_value.append(f_val)
+        x_value.append(np.linalg.norm((x_val - true_val)/ true_val))
+        i +=1
+        
+    return np.mean(x_value), np.var(x_value)**0.5, np.mean(f_value), np.var(f_value)**0.5, np.mean(c_value), np.var(c_value)**0.5
+
+def eval_alt(func, fprime, true_val):
+    x_value = []
+    f_value = []
+    c_value = []
+    i = 0
+    while i < POINT_NUM:
+        #print(i)
+        if true_val.shape[0] ==2:
+            start = np.random.uniform(-1, 1, 2);
+        else:
+            start = np.random.uniform(-1, 1, 10); 
+        #print("A")
+        x_val,f_val,c_val = alternate_method(func = func, x0 = start, fprime = fprime)
+        #print("B")
+        c_value.append(c_val)
+        f_value.append(f_val)
+        x_value.append(np.linalg.norm((x_val - true_val)))
+        i +=1
+    
+    return np.mean(x_value), np.var(x_value)**0.5, np.mean(f_value), np.var(f_value)**0.5, np.mean(c_value), np.var(c_value)**0.5
+
+
+
+if __name__ == "__main__":
+    np.random.seed(123)
+    print("The sequence is average erro, error bar, function value, error bar, # iteration, error bar")
+    print("function1")
+    print("CG Algorithm")
+    print(eval(func1,funcg1,np.array([1,1])))
+    print("Steepest Descent Algorithem")
+    np.random.seed(123)
+    print(eval_alt(func1,funcg1,np.array([1,1])))
+    print("function2")
+    print("CG Algorithm")    
+    np.random.seed(123)
+    print(eval(func2,funcg2,np.array([1,2,2,2,1,1,1,2,2,1])))
+    print("Steepest Descent Algorithem")
+    np.random.seed(123)
+    print(eval_alt(func2,funcg2,np.array([1,2,2,2,1,1,1,2,2,1])))
+

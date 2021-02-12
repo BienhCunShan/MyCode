@@ -1,0 +1,41 @@
+/usr/local/bin/python3.6 /Users/sihonghe/Documents/2018_Fall/268OP/HW/HW1/HW1.py
+
+Machine precision is 2.220446049250313e-16
+
+Problem1
+
+function1
+[number of evaluations]:
+x= 15.622 	y= 2.04188277951632
+[running time]:
+x= 0.016988039016723633 	y= 0.002744419398968197
+[relative distance]:
+x= 0.000488795143314342 	y= 0.0012240330279053157
+
+function2
+[number of evaluations]:
+x= 17.761 	y= 1.5166341612858278
+[running time]:
+x= 0.018146991729736328 	y= 0.002079620827822857
+[relative distance]:
+x= 0.00036990894088516677 	y= 0.0005148921646754727
+
+Problem2
+
+function1
+[number of evaluations]:
+x= 68.0 	y= 0.0
+[running time]:
+x= 0.07170534133911133 	y= 0.005871373690596694
+relative distance:
+x= 0.00031056200151402535 	y= 0.0
+
+function2
+[number of evaluations]:
+x= 73.211 	y= 0.4082225442643355
+[running time]:
+x= 0.07764816284179688 	y= 0.012045821789428682
+relative distance:
+x= 0.00031056200151402535 	y= 0.0
+
+Process finished with exit code 0
